@@ -5,6 +5,7 @@ import { Input, Button } from "@nextui-org/react";
 
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 
 import ImageNext from "next/image";
 import Icon from "/src/assets/icons/logo-1.png";
@@ -21,51 +22,47 @@ export default function Page() {
 
   const formik = useFormik({
     initialValues: {
-      username: "",
+      cust_email: "",
       password: "",
       recaptcha: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().required("username must be required"),
+      cust_email: Yup.string().required("Email must be required"),
       password: Yup.string()
-        .min(8, "Must be 8 characters or more")
+        .min(2, "Must be 2 characters or more")
         .required("Password must be required"),
       recaptcha: Yup.string().required("Please complete the reCAPTCHA"),
     }),
-    onSubmit: async (e) => {
-      // alert(JSON.stringify(values, null, 2));
-
+    onSubmit: async (values) => {
       try {
         setLoading(true);
-        const response = await API.post("user/login", JSON.stringify(e), {
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await axios.post(
+          "http://10.40.6.135:1501/umroh/user/login", // Replace with your actual API endpoint
+          values, // Send the form values directly
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
         console.log("success", response);
 
         toastPending({
-          textPending: "Waiting..",
+          textPending: "Waiting...",
           textSuccess: "Success Login",
         });
+
         setTimeout(() => {
-          router.push("dashboard");
+          router.push("/dashboard"); // Replace with your actual dashboard route
         }, 1000);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setTimeout(() => {
-          toastFailed({ title: "Username / Password Salah" });
+          toastFailed({ title: "Email / Password Salah" });
           setLoading(false);
         }, 1000);
       }
     },
   });
-
-  const resolveAfter3Sec = new Promise((resolve) => setTimeout(resolve, 3000));
-  const notifySuccess = () => {
-    toast.promise(resolveAfter3Sec, {
-      pending: "Waiting..",
-      success: "Success Login",
-    });
-  };
 
   return (
     <motion.div
@@ -101,17 +98,17 @@ export default function Page() {
             <hr className="border-solid border-2 border-primary w-[15%] my-4 mx-auto" />
             <form onSubmit={formik.handleSubmit}>
               <Input
-                label="Username"
+                label="Email"
                 className=""
                 variant="underlined"
-                name="username"
-                placeholder="Enter your username"
+                name="cust_email"
+                placeholder="Enter your cust_email"
                 onChange={formik.handleChange}
-                value={formik.values.username}
+                value={formik.values.cust_email}
               />
-              {formik.touched.username && formik.errors.username ? (
+              {formik.touched.cust_email && formik.errors.cust_email ? (
                 <div className="text-sm text-primary font-semibold">
-                  {formik.errors.username}
+                  {formik.errors.cust_email}
                 </div>
               ) : null}
 
