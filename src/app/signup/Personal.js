@@ -9,152 +9,283 @@ const ENDPOINT = "/user/register";
 import Image from "next/image";
 
 import { Button, Input, Select, SelectItem } from "@nextui-org/react";
-
-import { Formik, Form, FieldArray, useFormik, ErrorMessage } from "formik";
-
+import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import * as Yup from "yup";
+import { useFormik } from "formik";
 
 import { toastSuccess } from "@/components/ToastAlert";
+import { toastFailed, toastPending } from "@/components/ToastAlert";
 import DeleteIcon from "@/assets/icons/trash-icon.svg";
 
 export default function Personal() {
-  const initialValues = {
-    cust_nik: "",
-    cust_name: "",
-    cust_gender: "",
-    cust_birth_place: "",
-    cust_birth_date: "",
-    cust_hp: "",
-    password: "",
-    cust_email: "",
-    cust_group_id: "",
-    cust_position: "",
-  };
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const validationSchema = Yup.object().shape({
-    cust_nik: Yup.string().required("Required"),
-    cust_name: Yup.string().required("Required"),
-    cust_gender: Yup.string().required("Required"),
-    cust_birth_place: Yup.string().required("Required"),
-    cust_birth_date: Yup.date().required("Required"),
-    cust_hp: Yup.string().required("Required"),
-    password: Yup.string().min(8).required("Required"),
-    cust_email: Yup.string().email().required("Required"),
-    cust_group_id: Yup.string().required("Required"),
-    cust_position: Yup.string().required("Required"),
+  const formik = useFormik({
+    initialValues: {
+      cust_nik: "",
+      cust_name: "",
+      cust_gender: "",
+      cust_birth_place: "",
+      cust_birth_date: "",
+      cust_hp: "",
+      password: "",
+      cust_email: "",
+      cust_group_id: "",
+      cust_position: "",
+    },
+    validationSchema: Yup.object({
+      cust_nik: Yup.string().required("NIK must be required"),
+      password: Yup.string()
+        .min(2, "Must be 2 characters or more")
+        .required("Password must be required"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
+        const response = await axios.post(
+          "http://10.40.6.135:1501/umroh/user/register",
+          values,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        console.log("success", response);
+
+        toastPending({
+          textPending: "Waiting...",
+          textSuccess: "Success Login",
+        });
+
+        setTimeout(() => {
+          router.push("/signup");
+        }, 1000);
+      } catch (error) {
+        console.error(error);
+        setTimeout(() => {
+          toastFailed({ title: "Register failed" });
+          setLoading(false);
+        }, 1000);
+      }
+    },
   });
 
-  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
-    try {
-      const response = await axios.post(`${BASE_URL}${ENDPOINT}`, values);
-
-      resetForm();
-      toast.success("Account Success Created");
-      console.log("Data berhasil dikirim:", response.data);
-      onSuccess();
-      onClose();
-    } catch (error) {
-      console.error("Error saat mengirim data:", error);
-      toast.error("Gagal menambahkan data.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <div>
-      <>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={Yup.object({
-            product_code: Yup.number().required(
-              "product code must be required"
-            ),
-            product_desc: Yup.string().required(
-              "product description must be required"
-            ),
-            face_value: Yup.string().nullable(),
-            card_fee: Yup.number()
-              .nullable()
-              .moreThan(-1, "card fee must be less than 0"),
-            max_amount: Yup.number()
-              .nullable()
-              .moreThan(-1, "max amount must be less than 0"),
-            effective_months: Yup.number()
-              .nullable()
-              .moreThan(-1, "effective month must be less than 0"),
-            unit_cost: Yup.number().required("unit cost must be required"),
-          })}
-          onSubmit={handleSubmit}
-        >
-          {(props) => (
-            <Form>
-              <div className="w-full grid grid-cols-12 gap-4">
-                <div className="col-span-6">
-                  <Input
-                    isRequired
-                    type="number"
-                    size="sm"
-                    label="NIK"
-                    name="cust_nik"
-                    variant="bordered"
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    value={props.values.cust_nik}
-                  />
-                  {props.touched.cust_nik && props.errors.cust_nik ? (
-                    <div className="text-sm text-primary font-semibold">
-                      {props.errors.cust_nik}
-                    </div>
-                  ) : null}
-                </div>
-                <div className="col-span-6">
-                  <Input
-                    isRequired
-                    size="sm"
-                    label="Full Name"
-                    name="cust_name"
-                    variant="bordered"
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    value={props.values.cust_name}
-                  />
-                  {props.touched.cust_name && props.errors.cust_name ? (
-                    <div className="text-sm text-primary font-semibold">
-                      {props.errors.cust_name}
-                    </div>
-                  ) : null}
-                </div>
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {/* <ToastContainer position="top-center" /> */}
+        <div>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="w-full grid grid-cols-12 gap-4">
+              <div className="col-span-6">
+                <Input
+                  label="NIK"
+                  size="sm"
+                  variant="bordered"
+                  name="cust_nik"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_nik}
+                />
+                {formik.touched.cust_nik && formik.errors.cust_nik ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_nik}
+                  </div>
+                ) : null}
+              </div>
 
-                <div className="col-span-6">
-                  <Select
-                    label="Gender"
-                    size="sm"
-                    name="cust_gender"
-                    variant="bordered"
-                    onChange={props.handleChange}
-                    onBlur={props.handleBlur}
-                    value={props.values.cust_gender}
-                  >
-                    <SelectItem value="L">Laki-laki</SelectItem>
-                    <SelectItem value="P">Perempuan</SelectItem>
-                  </Select>
-                  {props.touched.cust_gender && props.errors.cust_gender ? (
-                    <div className="text-sm text-primary font-semibold">
-                      {props.errors.cust_gender}
-                    </div>
-                  ) : null}
-                </div>
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  label="Full Name"
+                  variant="bordered"
+                  name="cust_name"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_name}
+                />
+                {formik.touched.cust_name && formik.errors.cust_name ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_name}
+                  </div>
+                ) : null}
               </div>
-              <div className="mt-4">
-                <Button type="submit" disabled={props.isSubmitting}>
-                  Register
-                </Button>
+
+              <div className="col-span-6">
+                <Select
+                  size="sm"
+                  label="Gender"
+                  name="cust_gender"
+                  variant="bordered"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.cust_gender}
+                >
+                  <SelectItem value="L">Laki-laki</SelectItem>
+                  <SelectItem value="P">Perempuan</SelectItem>
+                </Select>
+                {formik.touched.cust_gender && formik.errors.cust_gender ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_gender}
+                  </div>
+                ) : null}
               </div>
-            </Form>
-          )}
-        </Formik>
-      </>
-    </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  label="Birth Place"
+                  variant="bordered"
+                  name="cust_birth_place"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_birth_place}
+                />
+                {formik.touched.cust_birth_place &&
+                formik.errors.cust_birth_place ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_birth_place}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  type="date"
+                  label="Birth Date"
+                  variant="bordered"
+                  name="ccust_birth_date"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.ccust_birth_date}
+                />
+                {formik.touched.ccust_birth_date &&
+                formik.errors.ccust_birth_date ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.ccust_birth_date}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  type="number"
+                  label="No HP"
+                  variant="bordered"
+                  name="cust_hp"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_hp}
+                />
+                {formik.touched.cust_hp && formik.errors.cust_hp ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_hp}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  type="email"
+                  label="Email"
+                  variant="bordered"
+                  name="cust_email"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_email}
+                />
+                {formik.touched.cust_email && formik.errors.cust_email ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_email}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  type="password"
+                  label="Password"
+                  variant="bordered"
+                  name="password"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.password}
+                />
+                {formik.touched.password && formik.errors.password ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.password}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  type="number"
+                  label="Group ID"
+                  variant="bordered"
+                  name="cust_group_id"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_group_id}
+                />
+                {formik.touched.cust_group_id && formik.errors.cust_group_id ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_group_id}
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="col-span-6">
+                <Input
+                  size="sm"
+                  label="Position"
+                  variant="bordered"
+                  name="cust_position"
+                  placeholder="Enter your email"
+                  onChange={formik.handleChange}
+                  value={formik.values.cust_position}
+                />
+                {formik.touched.cust_position && formik.errors.cust_position ? (
+                  <div className="text-sm text-primary font-semibold">
+                    {formik.errors.cust_position}
+                  </div>
+                ) : null}
+              </div>
+            </div>
+
+            <Button
+              color="primary"
+              radius="sm"
+              className="w-full mt-4 font-semibold hover:bg-secondary"
+              type="submit"
+            >
+              REGISTER
+            </Button>
+            <p className="mt-5 text-center text-sm text-gray-500">
+              Already have an account?{" "}
+              <span
+                className="font-semibold leading-6 text-black-500 hover:text-red-500 cursor-pointer"
+                onClick={() => {
+                  router.push("/login");
+                }}
+              >
+                Login Now!
+              </span>
+            </p>
+          </form>
+        </div>
+      </motion.div>
+    </>
   );
 }

@@ -38,7 +38,7 @@ export default function Page() {
         setLoading(true);
         const response = await axios.post(
           "http://10.40.6.135:1501/umroh/user/login", // Replace with your actual API endpoint
-          values, // Send the form values directly
+          values,
           {
             headers: { "Content-Type": "application/json" },
           }
@@ -84,7 +84,7 @@ export default function Page() {
             </p>
           </div>
         </div>
-        <div className="relative flex-1 basis-[50%] bg-white flex items-center justify-center px-5 md:px-10 lg:px-20">
+        <div className="relative flex-1 basis-[50%] bg-white flex items-center justify-center px-5 md:px-10 lg:px-20 ">
           <ImageNext
             src={Icon}
             alt="icon"

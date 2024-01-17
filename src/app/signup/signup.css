@@ -11,3 +11,8 @@
 .active-tab:hover::after {
   width: 100%;
 }
+
+.scrollable-box {
+  overflow-y: auto;
+  max-height: 500px;
+}

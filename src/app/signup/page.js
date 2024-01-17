@@ -30,13 +30,13 @@ export default function Page() {
     >
       {/* <ToastContainer position="top-center" /> */}
       <div className="flex h-full overflow-hidden bg-primary rounded-3xl shadow-box-lg">
-        <div className="relative flex-1 basis-[50%] bg-white flex justify-center px-5 md:px-10 lg:px-20">
+        <div className="relative flex-1 basis-[50%] bg-white flex justify-center px-5 md:px-10 lg:px-20 overflow-scroll">
           <div className="w-full">
-            <h1 className="w-full text-3xl font-bold text-center text-slate-400 mt-5">
+            <h1 className="w-full text-3xl font-bold text-center text-slate-400 mt-10">
               Register
             </h1>
 
-            <div className="flex justify-between mt-4">
+            <div className="flex justify-between mt-7 mb-5">
               <Button
                 variant={activeTab === "Personal" ? "flat" : "light"}
                 className={`tab ${
