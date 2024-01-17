@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
 import { Formik, Form, FieldArray } from "formik";
 import axios from "axios";
 
@@ -32,13 +33,8 @@ const initialValues = {
   ],
 };
 
-export default function Family({
-  isOpen,
-  onOpenChange,
-  size,
-  onClose,
-  onSuccess,
-}) {
+export default function Family() {
+  const router = useRouter();
   const [options, setOptions] = useState([]);
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -51,8 +47,6 @@ export default function Family({
       resetForm();
       toast.success("Gift Card Success Created");
       console.log("Data berhasil dikirim:", response.data);
-      onSuccess();
-      onClose();
     } catch (error) {
       console.error("Error saat mengirim data:", error);
       toast.error("Gagal menambahkan data.");
