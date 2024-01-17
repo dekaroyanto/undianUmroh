@@ -80,7 +80,7 @@ export default function Family() {
                 {({ insert, remove, push }) => (
                   <>
                     <div className="grid grid-cols-12 mt-3">
-                      <div className="grid grid-cols-8 gap-3 col-span-11 rounded-md bg-primary py-2 px-4 text-white font-semibold">
+                      <div className="grid grid-cols-8 gap-3 col-span-12 rounded-md bg-primary py-2 px-4 text-white font-semibold">
                         <p className="col-span-4 capitalize font-medium">
                           Member Name
                         </p>
