@@ -25,7 +25,7 @@ const initialValues = {
       cust_name: "",
       cust_gender: "",
       cust_birth_place: "",
-      cust_birth_date: "",
+      cust_birth_date: "2001-01-01",
       cust_hp: "",
       password: "",
       cust_email: "",
@@ -35,13 +35,18 @@ const initialValues = {
 };
 
 export default function Family() {
+  const genderOption = [
+    { value: "L", label: "Laki-laki" },
+    { value: "P", label: "Perempuan" },
+  ];
+
   const router = useRouter();
   const [options, setOptions] = useState([]);
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const response = await axios.post(
-        "http://10.40.6.135:1501/umroh/user/register",
+        "http://10.40.6.142:1501/umroh/user/register",
         values
       );
 
@@ -102,7 +107,7 @@ export default function Family() {
                         </div>
                       </div>
 
-                      <div className="max-h-64 overflow-auto">
+                      <div>
                         {props.values.items.length > 0 &&
                           props.values.items.map((item, index) => (
                             <div
@@ -110,7 +115,7 @@ export default function Family() {
                               className="border grid grid-cols-12 mb-2 p-2"
                             >
                               <div className="grid grid-cols-12 gap-2 col-span-12">
-                                <div className="col-span-6">
+                                <div className="col-span-12 md:col-span-6">
                                   <Input
                                     isRequired
                                     size="sm"
@@ -122,9 +127,10 @@ export default function Family() {
                                   />
                                 </div>
 
-                                <div className="col-span-6">
+                                <div className="col-span-12 md:col-span-6">
                                   <Input
                                     isRequired
+                                    type="number"
                                     size="sm"
                                     label="NIK"
                                     variant="bordered"
@@ -134,21 +140,82 @@ export default function Family() {
                                   />
                                 </div>
 
-                                <div className="col-span-6 ">
+                                <div className="col-span-12 md:col-span-6 ">
+                                  <Select
+                                    isRequired
+                                    size="sm"
+                                    label="Gender"
+                                    variant="bordered"
+                                    name={`items.${index}.cust_gender`}
+                                    onChange={props.handleChange}
+                                    onBlur={props.handleBlur}
+                                  >
+                                    {genderOption.map((gender) => (
+                                      <SelectItem
+                                        key={gender.value}
+                                        value={gender.value}
+                                      >
+                                        {gender.label}
+                                      </SelectItem>
+                                    ))}
+                                  </Select>
+                                </div>
+
+                                <div className="col-span-12 md:col-span-6 ">
                                   <Input
                                     isRequired
                                     size="sm"
-                                    label="Position"
+                                    label="Birth Place"
                                     variant="bordered"
-                                    name={`items.${index}.cust_position`}
+                                    name={`items.${index}.cust_birth_place`}
                                     onChange={props.handleChange}
-                                    value={item.cust_position}
+                                    value={item.cust_birth_place}
+                                  />
+                                </div>
+
+                                <div className="col-span-12 md:col-span-6 ">
+                                  <Input
+                                    isRequired
+                                    type="date"
+                                    size="sm"
+                                    label="Birth Date"
+                                    variant="bordered"
+                                    placeholder="Enter your birth date"
+                                    name={`items.${index}.cust_birth_date`}
+                                    onChange={props.handleChange}
+                                    value={item.cust_birth_date}
+                                  />
+                                </div>
+
+                                <div className="col-span-12 md:col-span-6 ">
+                                  <Input
+                                    isRequired
+                                    type="number"
+                                    size="sm"
+                                    label="Phone Number"
+                                    variant="bordered"
+                                    name={`items.${index}.cust_hp`}
+                                    onChange={props.handleChange}
+                                    value={item.cust_hp}
+                                  />
+                                </div>
+
+                                <div className="col-span-12 md:col-span-6 ">
+                                  <Input
+                                    isRequired
+                                    type="email"
+                                    size="sm"
+                                    label="Email"
+                                    variant="bordered"
+                                    name={`items.${index}.cust_email`}
+                                    onChange={props.handleChange}
+                                    value={item.cust_email}
                                   />
                                 </div>
 
                                 {index === 0 ? (
                                   <Input
-                                    className="col-span-6"
+                                    className="col-span-12 md:col-span-6"
                                     type="password"
                                     size="sm"
                                     label="Password"
@@ -159,7 +226,7 @@ export default function Family() {
                                     value={item.password}
                                   />
                                 ) : (
-                                  <div className="col-span-6 invisible">
+                                  <div className="col-span-12 md:col-span-6 invisible">
                                     <Input
                                       type="password"
                                       label="Password"
