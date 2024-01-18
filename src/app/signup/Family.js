@@ -19,13 +19,14 @@ import { genderList } from "./optionList";
 
 const initialValues = {
   group_name: "",
+  group_code: "CAT002",
   items: [
     {
       cust_nik: "",
       cust_name: "",
       cust_gender: "",
       cust_birth_place: "",
-      cust_birth_date: "2001-01-01",
+      cust_birth_date: "",
       cust_hp: "",
       password: "",
       cust_email: "",
@@ -45,6 +46,9 @@ export default function Family() {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
+      values.items.forEach((item, index) => {
+        item.cust_position = index === 0 ? "L" : "M";
+      });
       const response = await axios.post(
         "http://10.40.6.142:1501/umroh/user/register",
         values
@@ -244,7 +248,13 @@ export default function Family() {
                                   type="button"
                                   color="primary"
                                   className="secondary"
-                                  onClick={() => push("")}
+                                  onClick={() => {
+                                    if (props.values.items.length < 5) {
+                                      push("");
+                                    } else {
+                                      toast.error("Maximum members reached 5.");
+                                    }
+                                  }}
                                 >
                                   Add Member
                                 </Button>

@@ -69,7 +69,7 @@ export default function Page() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="h-screen px-10 py-20 md:px-30 lg:px-40 bg-gradient-to-r from-white to-slate-200"
+      className="h-screen px-5 md:px-10 lg:px-20 bg-gradient-to-r from-white to-slate-200"
     >
       {/* <ToastContainer position="top-center" /> */}
       <div className="flex h-full overflow-hidden bg-primary rounded-3xl shadow-box-lg">
