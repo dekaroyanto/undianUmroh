@@ -17,6 +17,7 @@ import { useFormik } from "formik";
 import { toastSuccess } from "@/components/ToastAlert";
 import { toastFailed, toastPending } from "@/components/ToastAlert";
 import DeleteIcon from "@/assets/icons/trash-icon.svg";
+import { genderList } from "./optionList";
 
 export default function Personal() {
   const router = useRouter();
@@ -24,16 +25,19 @@ export default function Personal() {
 
   const formik = useFormik({
     initialValues: {
-      cust_nik: "",
-      cust_name: "",
-      cust_gender: "",
-      cust_birth_place: "",
-      cust_birth_date: "",
-      cust_hp: "",
-      password: "",
-      cust_email: "",
-      cust_group_id: "",
-      cust_position: "",
+      items: [
+        {
+          cust_nik: "",
+          cust_name: "",
+          cust_gender: "",
+          cust_birth_place: "",
+          cust_birth_date: "",
+          cust_hp: "",
+          password: "",
+          cust_email: "",
+          cust_position: "L",
+        },
+      ],
     },
     validationSchema: Yup.object({
       cust_nik: Yup.string().required("NIK must be required"),
@@ -45,7 +49,7 @@ export default function Personal() {
       try {
         setLoading(true);
         const response = await axios.post(
-          "http://10.40.6.135:1501/umroh/user/register",
+          "http://10.40.6.142:1501/umroh/user/register",
           values,
           {
             headers: { "Content-Type": "application/json" },
@@ -79,17 +83,16 @@ export default function Personal() {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        {/* <ToastContainer position="top-center" /> */}
         <div>
-          <form onSubmit={formik.handleSubmit}>
-            <div className="w-full grid grid-cols-12 gap-4">
-              <div className="col-span-6">
+          <form onSubmit={formik.handleSubmit} className="w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="mb-4">
                 <Input
                   label="NIK"
                   size="sm"
                   variant="bordered"
                   name="cust_nik"
-                  placeholder="Enter your email"
+                  placeholder="Enter your NIK"
                   onChange={formik.handleChange}
                   value={formik.values.cust_nik}
                 />
@@ -100,13 +103,13 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   label="Full Name"
                   variant="bordered"
                   name="cust_name"
-                  placeholder="Enter your email"
+                  placeholder="Enter your full name"
                   onChange={formik.handleChange}
                   value={formik.values.cust_name}
                 />
@@ -117,18 +120,22 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Select
+                  isRequired
                   size="sm"
                   label="Gender"
-                  name="cust_gender"
                   variant="bordered"
+                  className=""
+                  name="cust_gender"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  value={formik.values.cust_gender}
                 >
-                  <SelectItem value="L">Laki-laki</SelectItem>
-                  <SelectItem value="P">Perempuan</SelectItem>
+                  {genderList.map((e) => (
+                    <SelectItem key={e.value} value={e.value}>
+                      {e.label}
+                    </SelectItem>
+                  ))}
                 </Select>
                 {formik.touched.cust_gender && formik.errors.cust_gender ? (
                   <div className="text-sm text-primary font-semibold">
@@ -137,13 +144,13 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   label="Birth Place"
                   variant="bordered"
                   name="cust_birth_place"
-                  placeholder="Enter your email"
+                  placeholder="Enter your birth place"
                   onChange={formik.handleChange}
                   value={formik.values.cust_birth_place}
                 />
@@ -155,33 +162,33 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   type="date"
                   label="Birth Date"
                   variant="bordered"
-                  name="ccust_birth_date"
+                  name="cust_birth_date"
                   placeholder="Enter your email"
                   onChange={formik.handleChange}
-                  value={formik.values.ccust_birth_date}
+                  value={formik.values.cust_birth_date}
                 />
-                {formik.touched.ccust_birth_date &&
-                formik.errors.ccust_birth_date ? (
+                {formik.touched.cust_birth_date &&
+                formik.errors.cust_birth_date ? (
                   <div className="text-sm text-primary font-semibold">
-                    {formik.errors.ccust_birth_date}
+                    {formik.errors.cust_birth_date}
                   </div>
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   type="number"
-                  label="No HP"
+                  label="Phone Number"
                   variant="bordered"
                   name="cust_hp"
-                  placeholder="Enter your email"
+                  placeholder="Enter your phone number"
                   onChange={formik.handleChange}
                   value={formik.values.cust_hp}
                 />
@@ -192,7 +199,7 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   type="email"
@@ -210,55 +217,20 @@ export default function Personal() {
                 ) : null}
               </div>
 
-              <div className="col-span-6">
+              <div className="mb-4">
                 <Input
                   size="sm"
                   type="password"
                   label="Password"
                   variant="bordered"
                   name="password"
-                  placeholder="Enter your email"
+                  placeholder="Enter your password"
                   onChange={formik.handleChange}
                   value={formik.values.password}
                 />
                 {formik.touched.password && formik.errors.password ? (
                   <div className="text-sm text-primary font-semibold">
                     {formik.errors.password}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="col-span-6">
-                <Input
-                  size="sm"
-                  type="number"
-                  label="Group ID"
-                  variant="bordered"
-                  name="cust_group_id"
-                  placeholder="Enter your email"
-                  onChange={formik.handleChange}
-                  value={formik.values.cust_group_id}
-                />
-                {formik.touched.cust_group_id && formik.errors.cust_group_id ? (
-                  <div className="text-sm text-primary font-semibold">
-                    {formik.errors.cust_group_id}
-                  </div>
-                ) : null}
-              </div>
-
-              <div className="col-span-6">
-                <Input
-                  size="sm"
-                  label="Position"
-                  variant="bordered"
-                  name="cust_position"
-                  placeholder="Enter your email"
-                  onChange={formik.handleChange}
-                  value={formik.values.cust_position}
-                />
-                {formik.touched.cust_position && formik.errors.cust_position ? (
-                  <div className="text-sm text-primary font-semibold">
-                    {formik.errors.cust_position}
                   </div>
                 ) : null}
               </div>
