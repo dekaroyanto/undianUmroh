@@ -106,20 +106,32 @@ export default function Family() {
                                 value={item.member_name}
                               />
 
-                              <Input
-                                className="col-span-6"
-                                type="number"
-                                size="sm"
-                                label="Member Phone"
-                                name={`items.${index}.member_phone`}
-                                variant="bordered"
-                                isRequired
-                                onChange={props.handleChange}
-                                value={item.member_phone}
-                              />
+                              {index === 0 ? (
+                                <Input
+                                  className="col-span-6"
+                                  type="number"
+                                  size="sm"
+                                  label="Member Phone"
+                                  name={`items.${index}.member_phone`}
+                                  variant="bordered"
+                                  isRequired
+                                  onChange={props.handleChange}
+                                  value={item.member_phone}
+                                />
+                              ) : (
+                                <div className="col-span-6 invisible">
+                                  <Input
+                                    type="number"
+                                    size="sm"
+                                    name={`items.${index}.member_phone`}
+                                    value={item.member_phone}
+                                    onChange={props.handleChange}
+                                  />
+                                </div>
+                              )}
                             </div>
 
-                            <div className="flex justify-between items-center col-span-12 mt-2">
+                            <div className="flex justify-start items-center col-span-12 mt-2">
                               <Button
                                 type="button"
                                 color="primary"
@@ -134,18 +146,17 @@ export default function Family() {
                                 Add Member
                               </Button>
 
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  remove(index);
-                                }}
-                              >
-                                <Image
-                                  className="cursor-pointer"
-                                  src={DeleteIcon}
-                                  alt="icon"
-                                />
-                              </button>
+                              <div className="pl-2">
+                                <Button
+                                  color="primary"
+                                  type="button"
+                                  onClick={() => {
+                                    remove(index);
+                                  }}
+                                >
+                                  Remove Member
+                                </Button>
+                              </div>
                             </div>
                           </div>
                         ))}
