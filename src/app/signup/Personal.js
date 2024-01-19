@@ -87,6 +87,12 @@ export default function Personal() {
                     "Birth Date is required"
                   ),
                   cust_hp: Yup.string().required("Phone Number is required"),
+                  cust_email: Yup.string()
+                    .required("Email is required")
+                    .email("Invalid email format"),
+                  password: Yup.string()
+                    .min(8, "Password must be at least 8 characters")
+                    .required("Password is required"),
                 })
               ),
             })}
@@ -156,6 +162,12 @@ export default function Personal() {
                                     name={`items.${index}.cust_gender`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_gender
+                                    }
                                   >
                                     {genderOption.map((gender) => (
                                       <SelectItem
@@ -166,6 +178,11 @@ export default function Personal() {
                                       </SelectItem>
                                     ))}
                                   </Select>
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_gender`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
+                                  />
                                 </div>
 
                                 <div className="col-span-12 md:col-span-6 ">
@@ -177,6 +194,17 @@ export default function Personal() {
                                     name={`items.${index}.cust_birth_place`}
                                     onChange={props.handleChange}
                                     value={item.cust_birth_place}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_birth_place
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_birth_place`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -191,6 +219,17 @@ export default function Personal() {
                                     name={`items.${index}.cust_birth_date`}
                                     onChange={props.handleChange}
                                     value={item.cust_birth_date}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_birth_date
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_birth_date`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -204,6 +243,16 @@ export default function Personal() {
                                     name={`items.${index}.cust_hp`}
                                     onChange={props.handleChange}
                                     value={item.cust_hp}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]?.cust_hp
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_hp`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -217,6 +266,16 @@ export default function Personal() {
                                     name={`items.${index}.cust_email`}
                                     onChange={props.handleChange}
                                     value={item.cust_email}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_email &&
+                                      !!props.errors?.items?.[index]?.cust_email
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_email`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -230,6 +289,16 @@ export default function Personal() {
                                     name={`items.${index}.password`}
                                     onChange={props.handleChange}
                                     value={item.password}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]?.password
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.password`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 

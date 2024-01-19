@@ -88,10 +88,10 @@ export default function Family() {
                 <div className="col-span-12 mb-3">
                   <Input
                     size="sm"
-                    label="Group Name"
+                    label="Family Name"
                     variant="bordered"
                     name="group_name"
-                    placeholder="Enter your group name"
+                    placeholder="Enter your family name"
                     onChange={props.handleChange}
                     value={props.values.group_name}
                   />
@@ -107,7 +107,7 @@ export default function Family() {
                     <>
                       <div className="grid grid-cols-1 mt-3">
                         <div className="col-span-12 rounded-md bg-primary py-2 px-2 text-white font-semibold">
-                          <p className="font-medium">Member Group</p>
+                          <p className="font-medium">Member Family</p>
                         </div>
                       </div>
 
