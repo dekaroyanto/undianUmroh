@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { Formik, Form, FieldArray } from "formik";
+import { Formik, Form, FieldArray, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
 import axios from "axios";
 
@@ -72,9 +72,22 @@ export default function Personal() {
           <Formik
             initialValues={initialValues}
             validationSchema={Yup.object({
-              cust_nik: Yup.string().min(
-                3,
-                "NIK must be at least 3 characters"
+              items: Yup.array().of(
+                Yup.object({
+                  cust_nik: Yup.string()
+                    .min(3, "NIK must be at least 3 characters")
+                    .max(16, "NIK must be at most 16 characters")
+                    .required("NIK is required"),
+                  cust_name: Yup.string().required("Full Name is required"),
+                  cust_gender: Yup.string().required("Gender is required"),
+                  cust_birth_place: Yup.string().required(
+                    "Birth Place is required"
+                  ),
+                  cust_birth_date: Yup.string().required(
+                    "Birth Date is required"
+                  ),
+                  cust_hp: Yup.string().required("Phone Number is required"),
+                })
               ),
             })}
             onSubmit={handleSubmit}
@@ -98,6 +111,16 @@ export default function Personal() {
                                     name={`items.${index}.cust_name`}
                                     onChange={props.handleChange}
                                     value={item.cust_name}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_name &&
+                                      !!props.errors?.items?.[index]?.cust_name
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_name`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -111,6 +134,16 @@ export default function Personal() {
                                     name={`items.${index}.cust_nik`}
                                     onChange={props.handleChange}
                                     value={item.cust_nik}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_name &&
+                                      !!props.errors?.items?.[index]?.cust_nik
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_nik`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
