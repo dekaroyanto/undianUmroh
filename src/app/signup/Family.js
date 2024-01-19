@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { Button, Checkbox, Input, Select, SelectItem } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-import { Formik, Form, FieldArray } from "formik";
+import { Formik, Form, FieldArray, ErrorMessage } from "formik";
 import { motion } from "framer-motion";
 import axios from "axios";
 
@@ -76,9 +76,32 @@ export default function Family() {
           <Formik
             initialValues={initialValues}
             validationSchema={Yup.object({
-              cust_nik: Yup.string().min(
-                3,
-                "NIK must be at least 3 characters"
+              group_name: Yup.string().required("Family Name is required"),
+              items: Yup.array().of(
+                Yup.object({
+                  cust_nik: Yup.string()
+                    .min(3, "NIK must be at least 3 characters")
+                    .max(16, "NIK must be at most 16 characters")
+                    .required("NIK is required"),
+                  cust_name: Yup.string().required("Full Name is required"),
+                  cust_gender: Yup.string().required("Gender is required"),
+                  cust_birth_place: Yup.string().required(
+                    "Birth Place is required"
+                  ),
+                  cust_birth_date: Yup.string().required(
+                    "Birth Date is required"
+                  ),
+                  cust_hp: Yup.string().required("Phone Number is required"),
+                  cust_email: Yup.string()
+                    .required("Email is required")
+                    .email("Invalid email format"),
+                  password: Yup.string().when(["index", "items"], {
+                    is: (index, items) => index === 0 && items[index]?.password,
+                    then: Yup.string()
+                      .min(8, "Password must be at least 8 characters")
+                      .required("Password is required"),
+                  }),
+                })
               ),
             })}
             onSubmit={handleSubmit}
@@ -94,12 +117,15 @@ export default function Family() {
                     placeholder="Enter your family name"
                     onChange={props.handleChange}
                     value={props.values.group_name}
+                    isInvalid={
+                      props.touched.group_name && !!props.errors.group_name
+                    }
                   />
-                  {props.touched.group_name && props.errors.group_name ? (
-                    <div className="text-sm text-primary font-semibold">
-                      {props.errors.group_name}
-                    </div>
-                  ) : null}
+                  <ErrorMessage
+                    name="group_name"
+                    component="div"
+                    className="text-red-500 text-xs mt-1"
+                  />
                 </div>
 
                 <FieldArray name="items">
@@ -128,6 +154,16 @@ export default function Family() {
                                     name={`items.${index}.cust_name`}
                                     onChange={props.handleChange}
                                     value={item.cust_name}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_name &&
+                                      !!props.errors?.items?.[index]?.cust_name
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_name`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -141,6 +177,15 @@ export default function Family() {
                                     name={`items.${index}.cust_nik`}
                                     onChange={props.handleChange}
                                     value={item.cust_nik}
+                                    isInvalid={
+                                      props.touched?.items?.[index]?.cust_nik &&
+                                      !!props.errors?.items?.[index]?.cust_nik
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_nik`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -153,6 +198,12 @@ export default function Family() {
                                     name={`items.${index}.cust_gender`}
                                     onChange={props.handleChange}
                                     onBlur={props.handleBlur}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_gender &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_gender
+                                    }
                                   >
                                     {genderOption.map((gender) => (
                                       <SelectItem
@@ -163,6 +214,11 @@ export default function Family() {
                                       </SelectItem>
                                     ))}
                                   </Select>
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_gender`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
+                                  />
                                 </div>
 
                                 <div className="col-span-12 md:col-span-6 ">
@@ -174,6 +230,17 @@ export default function Family() {
                                     name={`items.${index}.cust_birth_place`}
                                     onChange={props.handleChange}
                                     value={item.cust_birth_place}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_birth_place &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_birth_place
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_birth_place`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -188,6 +255,17 @@ export default function Family() {
                                     name={`items.${index}.cust_birth_date`}
                                     onChange={props.handleChange}
                                     value={item.cust_birth_date}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_birth_date &&
+                                      !!props.errors?.items?.[index]
+                                        ?.cust_birth_date
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_birth_date`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -201,6 +279,15 @@ export default function Family() {
                                     name={`items.${index}.cust_hp`}
                                     onChange={props.handleChange}
                                     value={item.cust_hp}
+                                    isInvalid={
+                                      props.touched?.items?.[index]?.cust_hp &&
+                                      !!props.errors?.items?.[index]?.cust_hp
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_hp`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
@@ -214,33 +301,54 @@ export default function Family() {
                                     name={`items.${index}.cust_email`}
                                     onChange={props.handleChange}
                                     value={item.cust_email}
+                                    isInvalid={
+                                      props.touched?.items?.[index]
+                                        ?.cust_email &&
+                                      !!props.errors?.items?.[index]?.cust_email
+                                    }
+                                  />
+                                  <ErrorMessage
+                                    name={`items.${index}.cust_email`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
 
-                                {index === 0 ? (
-                                  <Input
-                                    className="col-span-12 md:col-span-6"
-                                    type="password"
-                                    size="sm"
-                                    label="Password"
-                                    name={`items.${index}.password`}
-                                    variant="bordered"
-                                    isRequired
-                                    onChange={props.handleChange}
-                                    value={item.password}
-                                  />
-                                ) : (
-                                  <div className="col-span-12 md:col-span-6 invisible">
+                                <div className="col-span-12 md:col-span-6">
+                                  {index === 0 ? (
                                     <Input
                                       type="password"
-                                      label="Password"
                                       size="sm"
+                                      label="Password"
                                       name={`items.${index}.password`}
-                                      value={item.password}
+                                      variant="bordered"
+                                      isRequired
                                       onChange={props.handleChange}
+                                      value={item.password}
+                                      isInvalid={
+                                        props.touched?.items?.[index]
+                                          ?.password &&
+                                        !!props.errors?.items?.[index]?.password
+                                      }
                                     />
-                                  </div>
-                                )}
+                                  ) : (
+                                    <div className="col-span-12 md:col-span-6 invisible">
+                                      <Input
+                                        type="password"
+                                        label="Password"
+                                        size="sm"
+                                        name={`items.${index}.password`}
+                                        value={item.password}
+                                        onChange={props.handleChange}
+                                      />
+                                    </div>
+                                  )}
+                                  <ErrorMessage
+                                    name={`items.${index}.password`}
+                                    component="div"
+                                    className="text-red-500 text-xs mt-1"
+                                  />
+                                </div>
                               </div>
 
                               <div className="flex justify-start items-center col-span-12 mt-2">

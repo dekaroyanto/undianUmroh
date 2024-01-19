@@ -141,8 +141,7 @@ export default function Personal() {
                                     onChange={props.handleChange}
                                     value={item.cust_nik}
                                     isInvalid={
-                                      props.touched?.items?.[index]
-                                        ?.cust_name &&
+                                      props.touched?.items?.[index]?.cust_nik &&
                                       !!props.errors?.items?.[index]?.cust_nik
                                     }
                                   />
@@ -196,7 +195,7 @@ export default function Personal() {
                                     value={item.cust_birth_place}
                                     isInvalid={
                                       props.touched?.items?.[index]
-                                        ?.cust_gender &&
+                                        ?.cust_birth_place &&
                                       !!props.errors?.items?.[index]
                                         ?.cust_birth_place
                                     }
@@ -221,7 +220,7 @@ export default function Personal() {
                                     value={item.cust_birth_date}
                                     isInvalid={
                                       props.touched?.items?.[index]
-                                        ?.cust_gender &&
+                                        ?.cust_birth_date &&
                                       !!props.errors?.items?.[index]
                                         ?.cust_birth_date
                                     }
@@ -244,8 +243,7 @@ export default function Personal() {
                                     onChange={props.handleChange}
                                     value={item.cust_hp}
                                     isInvalid={
-                                      props.touched?.items?.[index]
-                                        ?.cust_gender &&
+                                      props.touched?.items?.[index]?.cust_hp &&
                                       !!props.errors?.items?.[index]?.cust_hp
                                     }
                                   />
@@ -290,8 +288,7 @@ export default function Personal() {
                                     onChange={props.handleChange}
                                     value={item.password}
                                     isInvalid={
-                                      props.touched?.items?.[index]
-                                        ?.cust_gender &&
+                                      props.touched?.items?.[index]?.password &&
                                       !!props.errors?.items?.[index]?.password
                                     }
                                   />
@@ -301,18 +298,6 @@ export default function Personal() {
                                     className="text-red-500 text-xs mt-1"
                                   />
                                 </div>
-
-                                {/* <div className="col-span-12 md:col-span-6 invisible ">
-                                  <Input
-                                    isRequired
-                                    size="sm"
-                                    label="Position"
-                                    variant="bordered"
-                                    name={`items.${index}.cust_position`}
-                                    onChange={props.handleChange}
-                                    value={item.cust_position}
-                                  />
-                                </div> */}
                               </div>
                             </div>
                           ))}
