@@ -50,12 +50,12 @@ export default function Family() {
         item.cust_position = index === 0 ? "L" : "M";
       });
       const response = await axios.post(
-        "http://10.40.6.142:1501/umroh/user/register",
+        "http://10.40.6.77:1501/umroh/user/register",
         values
       );
 
       resetForm();
-      toast.success("Gift Card Success Created");
+      toast.success("Account Success Created");
       console.log("Data berhasil dikirim:", response.data);
     } catch (error) {
       console.error("Error saat mengirim data:", error);

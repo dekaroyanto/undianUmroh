@@ -37,7 +37,7 @@ export default function Page() {
       try {
         setLoading(true);
         const response = await axios.post(
-          "http://10.40.6.77:1501/umroh/user/login", // Replace with your actual API endpoint
+          "http://10.40.6.77:1501/umroh/user/login",
           values,
           {
             headers: { "Content-Type": "application/json" },
